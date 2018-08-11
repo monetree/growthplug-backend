@@ -1,1 +1,1 @@
-web: gunicorn jiroku.wsgi --log-file -
+web: gunicorn growthplug.wsgi --log-file -
