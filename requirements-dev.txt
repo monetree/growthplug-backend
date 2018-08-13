@@ -9,7 +9,6 @@ Django==1.11.9
 django-allauth==0.36.0
 idna==2.7
 oauthlib==2.1.0
-pkg-resources==0.0.0
 PyJWT==1.6.4
 python-decouple==3.1
 python3-openid==3.1.0
