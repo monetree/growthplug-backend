@@ -6,14 +6,19 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from social_django.models import UserSocialAuth
 import json
-from .models import PostData
+from .models import PostData,LoginUser
 import ast
 
 def login_user(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        username = request.POST.get('username')
         password = request.POST.get('password')
-    return redirect('http://localhost:3000/')
+        obj=LoginUser.objects.filter(username=username,password=password).count()
+        if obj > 0:
+            print('okk')
+            return redirect('https://growthplug-facebook-app.herokuapp.com/')
+        else:
+            return redirect('/')
 
 def post_data(request):
     data    = request.body
