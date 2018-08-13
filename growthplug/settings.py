@@ -21,14 +21,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-SECRET_KEY = '@27yhaj8q@4yn7%vr*42kuf$jcus^*(uji8=j%j5o^f6z+(-ii'
-DEBUG = True
-ALLOWED_HOSTS = []
+# SECRET_KEY = '@27yhaj8q@4yn7%vr*42kuf$jcus^*(uji8=j%j5o^f6z+(-ii'
+# DEBUG = True
+# ALLOWED_HOSTS = []
 
-# 
-# SECRET_KEY = config('SECRET_KEY')
-# DEBUG = config('DEBUG',default=False, cast=bool)
-# ALLOWED_HOSTS = ['*']
+#
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG',default=False, cast=bool)
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
