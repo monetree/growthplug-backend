@@ -3,40 +3,54 @@ from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeFor
 from django.contrib.auth import update_session_auth_hash, login, authenticate
 from django.contrib import messages
 from django.shortcuts import render, redirect
-
+from django.http import JsonResponse
 from social_django.models import UserSocialAuth
+import json
+from .models import PostData
+import ast
 
-def signup(request):
+def login_user(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            user = authenticate(
-                username=form.cleaned_data.get('username'),
-                password=form.cleaned_data.get('password1')
-            )
-            login(request, user)
-            return redirect('home')
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+    return redirect('http://localhost:3000/')
+
+def post_data(request):
+    data    = request.body
+    convert =data.decode("utf-8")
+    lst=convert.split(',')
+    if len(lst) == 2:
+        title=lst[0]
+        desc=lst[1]
+        obj=PostData.objects.create(title=lst[0],desc=lst[1])
+    return JsonResponse({"code":200})
+
+def display_users(request):
+    data=list(PostData.objects.values())
+    return JsonResponse(data,safe=False)
+
+def update_data(request,id):
+    print(id)
+    data    = request.body
+    convert =data.decode("utf-8")
+    lst=convert.split(',')
+    obj=PostData.objects.filter(pk=id).update(title=lst[0],desc=lst[1])
+    return JsonResponse({"code":200})
+
+def delete_data(request,id):
+    print(id)
+    data=PostData.objects.filter(pk=id).delete()
+    return JsonResponse({"code":200})
+
 
 @login_required
 def home(request):
-    return render(request, 'core/home.html')
+    return render(request, 'home.html')
 
 @login_required
 def settings(request):
     user = request.user
 
-    try:
-        github_login = user.social_auth.get(provider='github')
-    except UserSocialAuth.DoesNotExist:
-        github_login = None
-    try:
-        twitter_login = user.social_auth.get(provider='twitter')
-    except UserSocialAuth.DoesNotExist:
-        twitter_login = None
     try:
         facebook_login = user.social_auth.get(provider='facebook')
     except UserSocialAuth.DoesNotExist:
@@ -44,9 +58,7 @@ def settings(request):
 
     can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
 
-    return render(request, 'core/settings.html', {
-        'github_login': github_login,
-        'twitter_login': twitter_login,
+    return render(request, 'settings.html', {
         'facebook_login': facebook_login,
         'can_disconnect': can_disconnect
     })
